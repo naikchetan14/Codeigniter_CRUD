@@ -5,7 +5,15 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
-$routes->get('/', 'Home::index');
-$routes->post('add','Home::add');
-$routes->get('/delete/(:num)','Home::delete/$1');
-$routes->post('edit/(:num)','Home::edit/$1');
+$routes->group('',['filter' =>'auth'] ,function (RouteCollection $routes) {
+    $routes->get('/', 'Home::index');
+    $routes->post('add','Home::add');
+    $routes->get('/delete/(:num)','Home::delete/$1');
+    $routes->post('edit/(:num)','Home::edit/$1');
+});
+
+$routes->get('/register','Home::register');
+$routes->get('login','Home::login');
+$routes->post('/addUser', 'User::addNewUser'); 
+$routes->get('/logout','User::LogOut');
+
