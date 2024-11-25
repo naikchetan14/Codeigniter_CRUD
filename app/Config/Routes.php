@@ -15,5 +15,6 @@ $routes->group('',['filter' =>'auth'] ,function (RouteCollection $routes) {
 $routes->get('/register','Home::register');
 $routes->get('login','Home::login');
 $routes->post('/addUser', 'User::addNewUser'); 
-$routes->get('/logout','User::LogOut');
+$routes->post('/logout','User::LogOut');
+$routes->post('/getloginUser','User::getLoginUser');
 

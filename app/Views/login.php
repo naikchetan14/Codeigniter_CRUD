@@ -17,7 +17,7 @@
   <section class="container">
   <div class="modal-body container w-25 h-50 shadow-sm p-4 mt-5">
     <h2 class="text-center mt-3 mb-3 fw-bold">Log in</h2>
-            <form method="POST">
+            <form method="POST" action="/getloginUser">
              
 
               <div class="mb-3">

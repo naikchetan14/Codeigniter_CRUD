@@ -12,7 +12,8 @@ class UserModel extends Model
 
     public function addUser($data)
     {
-        return $this->insert($data,true);
+        $this->insert($data,true);
+        return $this->find($this->insertID());;
     }
     public function getLoginUser($id)
     {

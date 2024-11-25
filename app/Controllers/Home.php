@@ -18,16 +18,22 @@ class Home extends BaseController
         $allTodos = $response['data'];
         return view('home', ['allTodos' => $allTodos]);
     }
-    
-    public function register(): string{
-       return view('register');
+
+    public function register()
+    {
+        if (session()->get('isLoggedIn')) {
+            return redirect()->to('/');
+        }
+
+        return view('register');
     }
-    public function login(): string{
-        if(session()->get('isLoggedIn')){
+    public function login()
+    {
+        if (session()->get('isLoggedIn')) {
             return redirect()->to('/');
         }
         return view('login');
-     }
+    }
     public function add()
     {
         $title = $this->request->getPost('title');

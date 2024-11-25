@@ -185,7 +185,7 @@
 
               <div class="mb-3">
                 <label for="status" class="form-label">Update Status</label>
-                <input type="number" class="form-control" min="0" max="1" step="1" value="0" id="status" name="status" value="" aria-describedby="emailHelp">
+                <input type="number" class="form-control" min="0" max="1" required  value="" id="status" name="status" value="" aria-describedby="emailHelp">
               </div>
               <button type="submit" class="btn btn-success">Update</button>
             </form>
@@ -266,6 +266,7 @@
                       data-title="<?= esc($todo['title']); ?>"
                       data-description="<?= esc($todo['description']); ?>"
                       data-date="<?= esc($todo['date']); ?>">
+                      data-status="<?= esc($todo['date']); ?>">
                       <i class="mx-1 fa-regular fa-pen-to-square"></i>
                     </button>
                   </td>
@@ -307,6 +308,7 @@
       var title = button.getAttribute('data-title');
       var description = button.getAttribute('data-description');
       var date = button.getAttribute('data-date');
+      var date = button.getAttribute('data-status');
 
       // Update the modal's content
       var modalTitle = myModal.querySelector('.modal-title');
@@ -314,12 +316,16 @@
       var titleInput = myModal.querySelector('#title');
       var descriptionInput = myModal.querySelector('#desc');
       var dateInput = myModal.querySelector('#date');
+      var status = myModal.querySelector('#status');
+
 
       modalTitle.textContent = 'Update ToDo - ID: ' + id;
       todoId.value = id;
       titleInput.value = title;
       descriptionInput.value = description;
       dateInput.value = date;
+      status.value=status;
+      
       var editTodoForm = myModal.querySelector('#editTodoForm');
       editTodoForm.action = '/edit/' + id;
     });
