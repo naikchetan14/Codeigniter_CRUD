@@ -10,6 +10,7 @@ $routes->group('',['filter' =>'auth'] ,function (RouteCollection $routes) {
     $routes->post('add','Home::add');
     $routes->get('/delete/(:num)','Home::delete/$1');
     $routes->post('edit/(:num)','Home::edit/$1');
+    $routes->post('/todofilter','Home::filter');
 });
 
 $routes->get('/register','Home::register');

@@ -7,11 +7,14 @@
   <meta name="description" content="The small framework with powerful features">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="shortcut icon" type="image/png" href="/favicon.ico">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <!-- STYLES -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
   <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
   <style {csp-style-nonce}>
     .dataTable {
@@ -86,9 +89,11 @@
       font-weight: bolder;
     }
 
-    .dataTables_filter input:hover {
-      border: 1px solid green;
+    .dataTables_filter input:hover,
+    .dataTables_filter input:active {
+      border: 2px solid green !important;
     }
+
 
     #todoTable_filter {
       margin-bottom: 10px;
@@ -100,7 +105,7 @@
 
   <!-- HEADER: MENU + HEROE SECTION -->
   <header>
-   <?= $this->include('layouts/header') ?>
+    <?= $this->include('layouts/header') ?>
   </header>
 
   <!-- CONTENT -->
@@ -116,8 +121,8 @@
 
     <!-- Error Alert -->
     <?php if (session()->getFlashdata('errors')): ?>
-      <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
-        <?= implode('<br>', session()->getFlashdata('errors')) ?>
+      <div class="alert alert-danger alert-dismissible fade w-25 mx-auto show mt-3" role="alert">
+        <?= session()->getFlashdata('errors') ?>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
     <?php endif; ?>
@@ -179,13 +184,13 @@
               </div>
 
               <div class="mb-3">
-                <label for="date" class="form-label">Enter Date</label>
-                <input type="date" class="form-control" id="date" name="date" value="" aria-describedby="emailHelp">
+                <label for="dateField" class="form-label">Enter Date</label>
+                <input type="date" class="form-control" id="dateField" name="date" value="" aria-describedby="emailHelp">
               </div>
 
               <div class="mb-3">
                 <label for="status" class="form-label">Update Status</label>
-                <input type="number" class="form-control" min="0" max="1" required  value="" id="status" name="status" value="" aria-describedby="emailHelp">
+                <input type="number" class="form-control" min="0" max="1" required value="" id="status" name="status" value="0" aria-describedby="emailHelp">
               </div>
               <button type="submit" class="btn btn-success">Update</button>
             </form>
@@ -194,9 +199,40 @@
         </div>
       </div>
     </div>
-
-
     <h1 class="text-center mt-4 text-primary-emphasis">ToDo List</h1>
+    <div class="mt-3 text-right d-flex flex-row gap-3 flex-wrap" style="width: 100%;">
+      <span class="fw-bold text-secondary">Filter By Name: </span><select data-placeholder="Select a Title" id="nameFilter"
+        class="flex-grow-1 flex-shrink-1 nameDropdown" style="border:2px solid green;border-radius:4px;width:150px;">
+        <option value="">Select a Title</option>
+        <?php foreach ($nameList as $item): ?>
+          <option value="<?= esc($item) ?>"><?= esc($item) ?></option>
+        <?php endforeach; ?>
+      </select>
+
+      <span class="fw-bold text-secondary">Filter By description: </span><select data-placeholder="Select a Description" id="descFilter"
+        class="flex-grow-1 flex-shrink-1 descDropdown" style="border:2px solid green;border-radius:4px;width:150px;">
+        <option value="">Select a Description</option>
+        <?php foreach ($descriptionList as $item): ?>
+          <option value="<?= esc($item) ?>"><?= esc($item) ?></option>
+        <?php endforeach; ?>
+      </select>
+
+      <span class="fw-bold text-secondary">Filter By Status: </span><select data-placeholder="Select a Status" id="statusFilter" class="flex-grow-1 flex-shrink-1 statusDropdown"
+        style="border:2px solid green;border-radius:4px;width:150px;">
+        <option value="">Select a Status</option>
+        <option value="Pending">Pending</option>
+        <option value="Completed">Completed</option>
+      </select>
+      <span class="fw-bold text-secondary">Filter By ID: </span><select data-placeholder="Select a ID" id="idFilter"
+        class="flex-grow-1 flex-shrink-1 idDropdown" style="border:2px solid green;border-radius:4px;width:150px;">
+        <option value="">Select a ID</option>
+        <?php foreach ($todoIDS as $item): ?>
+          <option value="<?= esc($item) ?>"><?= esc($item) ?></option>
+        <?php endforeach; ?>
+      </select>
+      </select>
+    </div>
+
     <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-success btn-sm mt-2 mb-2"><i class="fa-regular fa-plus"></i></button>
     <div style="height: 450px; overflow-y: auto;">
       <table class="table text-center" id="todoTable" style="max-height:200px;">
@@ -233,6 +269,7 @@
                       data-bs-toggle="modal"
                       data-bs-target="#staticBackdrop"
                       data-id="<?= esc($todo['Id']); ?>"
+                      data-staus="<?= esc($todo['status']); ?>"
                       data-title="<?= esc($todo['title']); ?>"
                       data-description="<?= esc($todo['description']); ?>"
                       data-date="<?= esc($todo['date']); ?>">
@@ -263,10 +300,10 @@
                       data-bs-toggle="modal"
                       data-bs-target="#staticBackdrop"
                       data-id="<?= esc($todo['Id']); ?>"
+                      data-staus="<?= esc($todo['status']); ?>"
                       data-title="<?= esc($todo['title']); ?>"
                       data-description="<?= esc($todo['description']); ?>"
                       data-date="<?= esc($todo['date']); ?>">
-                      data-status="<?= esc($todo['date']); ?>">
                       <i class="mx-1 fa-regular fa-pen-to-square"></i>
                     </button>
                   </td>
@@ -288,15 +325,20 @@
   <!-- FOOTER: DEBUG INFO + COPYRIGHTS -->
   <?= $this->include('layouts/footer') ?>
 
-  
+
 
   <!-- SCRIPTS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 <script {csp-script-nonce}>
   $(document).ready(function() {
+    $('#titleFilter,#descFilter,#statusFilter,#idFilter').select2();
     $('#todoTable').DataTable({
-      "pageLength": 5
+      "pageLength": 5,
+      "lengthMenu": [
+        [5, 10, 25, -1],
+        [5, 10, 25, "All"]
+      ]
     }); // Initialize DataTables on the table with id 'todoTable'
     var myModal = document.getElementById('staticBackdrop');
     myModal.addEventListener('show.bs.modal', function(event) {
@@ -307,28 +349,119 @@
       var id = button.getAttribute('data-id');
       var title = button.getAttribute('data-title');
       var description = button.getAttribute('data-description');
-      var date = button.getAttribute('data-date');
-      var date = button.getAttribute('data-status');
+      var dateVal = button.getAttribute('data-date');
+      var statusVal = button.getAttribute('data-status');
 
       // Update the modal's content
       var modalTitle = myModal.querySelector('.modal-title');
       var todoId = myModal.querySelector('#todoId');
       var titleInput = myModal.querySelector('#title');
       var descriptionInput = myModal.querySelector('#desc');
-      var dateInput = myModal.querySelector('#date');
+      var dateInput = myModal.querySelector('#dateField');
       var status = myModal.querySelector('#status');
+      console.log('Date val', dateVal, statusVal)
 
 
       modalTitle.textContent = 'Update ToDo - ID: ' + id;
       todoId.value = id;
       titleInput.value = title;
       descriptionInput.value = description;
-      dateInput.value = date;
-      status.value=status;
-      
+      dateInput.value = dateVal;
+      status.value = statusVal;
+
       var editTodoForm = myModal.querySelector('#editTodoForm');
       editTodoForm.action = '/edit/' + id;
+
     });
+    $('.js-example-basic-single').select2({
+      placeholder: 'Select an option'
+    });
+    $('.nameDropdown').select2({
+      placeholder: "Select a Title",
+      allowClear: true
+    });
+    $('.descDropdown').select2({
+      placeholder: "Select a the description",
+      allowClear: true
+    });
+
+    $('.statusDropdown').select2({
+      placeholder: "Select the status",
+      allowClear: true
+    });
+    $('.idDropdown').select2({
+      placeholder: "Select the ID",
+      allowClear: true
+    });
+
+    $('#nameFilter,#descFilter,#statusFilter,#idFilter').on('change', function() {
+      const title = $('#nameFilter').val();
+      const desc = $('#descFilter').val();
+      const status = $('#statusFilter').val() === 'Completed' ? 1 : 0;
+      const idVal = $('#idFilter').val();
+      $.ajax({
+        url: '/todofilter',
+        method: "POST",
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Adjust according to your CSRF setup
+        },
+        contentType: 'application/json',
+        data: JSON.stringify({
+          title: title,
+          description: desc,
+          status: status,
+          id: idVal
+        }),
+        success: function(response) {
+          console.log("Success", response);
+          // Clear the existing table body
+          const todoTableBody = $('#todoTable tbody');
+          todoTableBody.empty();
+
+          if (response.length !== 0) {
+            response.forEach((item) => {
+              console.log('status', typeof item.status)
+              const statusText = item.status === '1' ? 'Completed' : 'Pending';
+              const btnDisabled = item.status === '1' ? true : false;
+              const statusTextclass = item.status == '1' ? 'text-success' : 'text-danger';
+              todoTableBody.append(
+                `<tr>         
+                <th scope="row">${item.Id}</th>
+                  <td style="text-decoration:  ${statusText === 'Completed'?'line-through':''};">${item.title}</td>
+                  <td style=" text-decoration: ${statusText === 'Completed'?'line-through':''}">${item.description}</td>
+                  <td style=" text-decoration:  ${statusText === 'Completed'?'line-through':''};">${item.date}</td>
+                  <td>
+                    <div>
+                      <p class="${statusTextclass} fw-bold">${statusText}</p>
+                    </div>
+                  </td>
+                  <td>
+                <button type="button" disabled="${ statusText === 'Completed'?true:false}" class="btn btn-primary btn-sm"
+                      data-bs-toggle="modal"
+                      data-bs-target="#staticBackdrop"
+                      data-id="${item.Id}"
+                      data-staus=""
+                      data-title="${item.title}"
+                      data-description="${item.description}"
+                      data-date="${item.date}">
+                      <i class="mx-1 fa-regular fa-pen-to-square"></i>
+                    </button>
+                  </td>
+     <td><a href="/delete/${item.Id}" onclick="confirm('confirm You want to Delete!');"><button type="button" class="btn btn-danger btn-sm" action="/delete/<?= $todo["Id"] ?>"><i class="fa-sharp fa-solid fa-trash"></i></button></a></td>
+     </tr>      
+           `
+              );
+            });
+          }else{
+            todoTableBody.append('<h6 class="text-danger text-center w-100 d-block">No Todos Found</h6>');
+          }
+        },
+        error: function() {
+          console.log("error");
+        }
+      })
+    })
+
 
   });
 </script>

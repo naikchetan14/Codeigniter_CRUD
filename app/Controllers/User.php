@@ -12,50 +12,55 @@ class User extends BaseController
     {
         $this->userModel = new ModelsUserModel();
     }
-
+    
     public function getLoginUser()
     {
-        $email = $this->request->getPost("email");
-        $password = $this->request->getPost("password");
-        $user = $this->userModel->where('email', $email)->first();
-        // log_message ('DEBUG','my message'.print_r($user,true));
-        $checkValidation = password_verify($password, $user['password']);
-        // log_message('DEBUG', 'Password verification result: ' . ($checkValidation ? 'Valid' : 'Invalid'));
+        $validation = \Config\Services::validation();
+        $validation->setRules([
+            'email' => 'required|valid_email',
+            'password' => 'required',
+        ]);
+        $data = $this->request->getPost();
 
-        // if(!$checkValidation){
-        //     return redirect()->to(base_url('/login'));
-        // }
+    
+        if (!$this->validate($validation->getRules(),$data)) {
+            return redirect()->to(base_url('/login'))->with('message', 'Validation failed!')->withInput()->with('errors', $this->validator->getErrors());
+        }
+    
+        $email = $this->request->getPost('email');
+        $password = $this->request->getPost('password');
+        $user = $this->userModel->where('email', $email)->first();
+
+        // Check if user exists and verify password
         if ($user) {
+            // Set session data
             session()->set([
                 'isLoggedIn' => true,
                 'userID' => $user['userID'],
                 'userName' => $user['name']
             ]);
-            return redirect()->to(base_url('/'));
+            return redirect()->to(base_url('/'))->with('message', 'Login successful!');
+        } else {
+            log_message('debug', "Invalid login credentials for email: $email");
+            return redirect()->to(base_url('/login'))->with('message', 'Invalid email or password');
         }
     }
     public function addNewUser()
     {
         $validation = \Config\Services::validation();
-        // log_message('info', 'Add New User method called with data: ' . $this->request->getPost());
         // Set validation rules
         $validation->setRules([
             'name' => 'required|min_length[5]|max_length[20]',
             'email' => 'required|valid_email',
             'password' => 'required|min_length[6]',
-            'cpassword' => 'required|min_length[6]',
+            'cpassword' => 'required|matches[password]',
         ]);
         $data = $this->request->getPost();
 
 
         // Validate the data
         if (!$this->validate($validation->getRules(), $data)) {
-            redirect()->to(base_url('/register'))->with('message', 'failed to add!');
-            // Validation failed, return to the form with error messages
-            return $this->response->setJSON([
-                'status' => 'error',
-                'errors' => $this->validator->getErrors(),
-            ]);
+            return redirect()->to(base_url('/register'))->withInput()->with('errors', $this->validator->getErrors());
         }
 
         $name = $this->request->getPost('name');
@@ -64,11 +69,11 @@ class User extends BaseController
         $confirmPassword = $this->request->getPost('cpassword');
 
         if ($name &&  $email && $password && $confirmPassword === $password) {
-            $password = password_hash($password, PASSWORD_BCRYPT);
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
             $user = $this->userModel->addUser([
                 'name' => $name,
                 'email' => $email,
-                'password' => $password,
+                'password' => $hashedPassword,
             ]);
             // Log the user information
             session()->set([
@@ -89,9 +94,7 @@ class User extends BaseController
 
     public function LogOut()
     {
-        echo "running Log out";
         session()->remove('isLoggedIn');
-
         session()->destroy();
         return redirect()->to(base_url('/login'));
     }

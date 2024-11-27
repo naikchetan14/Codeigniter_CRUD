@@ -116,9 +116,11 @@ class DatabaseService
     public function update($id, array $data)
     {
         $this->db->transStart(); // Start MySQL transaction
+        log_message('debug', 'Before logging MySQL update message.');
 
         try {
             // Get the MongoDB ID from MySQL
+            log_message('debug', 'Inserted into MySQL with ID: ' . 'Runnging nxnbcb');
             $record = $this->db->table($this->table)->where($this->primaryKey, $id)->get()->getRow();
             if (!$record) {
                 throw new Exception('Record not found in MySQL.');

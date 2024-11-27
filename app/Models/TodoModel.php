@@ -39,4 +39,30 @@ class TodoModel extends Model
     {
         return $this->databaseService->update($id,$data);
     }
+
+    public function todoFilter($filters) {
+           // Retrieve the JSON input
+           log_message('info', 'Filter Values: ' . json_encode($filters));
+           $builder = $this->db->table('task');
+
+           // Apply filters based on the provided parameters
+           if (!empty($filters['title'])) {
+               $builder->like('title', $filters['title']);
+           }
+           if (!empty($filters['description'])) {
+            $description = trim($filters['description']);
+            $builder->like('description', $description);
+        }
+           if (!empty($filters['status'])) {
+               $builder->where('status', $filters['status']);
+           }
+           if (!empty($filters['id'])) {
+               $builder->where('id', $filters['id']);
+           }
+           $query = $builder->get();
+           log_message('info', 'Last Query: ' . $this->db->getLastQuery());
+       
+           // Execute the query and return the results
+           return $query->getResultArray();
+    }
 }
