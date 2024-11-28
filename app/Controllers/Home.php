@@ -36,6 +36,22 @@ class Home extends BaseController
         ]);
     }
 
+    public function download()
+    {
+        $data = $this->todoModel->findAll();
+        $filename = 'data_export_' . date('Ymd') . '.csv';
+        header("Content-Description: File Transfer");
+        header("Content-Disposition: attachment; filename=$filename");
+        header("Content-Type: application/csv; ");
+        $file = fopen('php://output', 'w');
+        $header = array("Id", "title", "description", "date", "status");
+        fputcsv($file, $header);
+        foreach ($data as $row) {
+            fputcsv($file, $row);
+        }
+        fclose($file);
+        exit;
+    }
 
     public function register()
     {
@@ -121,52 +137,53 @@ class Home extends BaseController
         return redirect()->to(base_url('/'))->with('message', 'failed to add the todo');
         // $this->todoModel->updateTodos($id);
     }
-    public function filter(){
+    public function filter()
+    {
 
-    // Log the received data for debugging
-    // log_message('info', 'Received filter parameters: ' . json_encode($data));
-    //     log_message('info','Running filter method');
-    //     $title=$this->request->getPost("title");
-    //     $description=$this->request->getPost("description");
-    //     $status=$this->request->getPost("status");
+        // Log the received data for debugging
+        // log_message('info', 'Received filter parameters: ' . json_encode($data));
+        //     log_message('info','Running filter method');
+        //     $title=$this->request->getPost("title");
+        //     $description=$this->request->getPost("description");
+        //     $status=$this->request->getPost("status");
 
-    //     $idVal=$this->request->getPost("idVal");
-    //     log_message('info', "Received filter parameters: Title: $title, Description: $description,ID: $idVal");
-    //     $todoFilterResult=$this->todoModel->todoFilter([
-    //         'title' => $title,
-    //         'description' => $description,
-    //         'status' => $status,
-    //         'id'=> $idVal
-    //     ]);
-    //     return $this->response->setJSON($todoFilterResult);
-    $data = $this->request->getJSON(true); // true returns an associative array
+        //     $idVal=$this->request->getPost("idVal");
+        //     log_message('info', "Received filter parameters: Title: $title, Description: $description,ID: $idVal");
+        //     $todoFilterResult=$this->todoModel->todoFilter([
+        //         'title' => $title,
+        //         'description' => $description,
+        //         'status' => $status,
+        //         'id'=> $idVal
+        //     ]);
+        //     return $this->response->setJSON($todoFilterResult);
+        $data = $this->request->getJSON(true); // true returns an associative array
 
-    // Log the received data for debugging
-    log_message('info', 'Received filter parameters: ' . json_encode($data));
+        // Log the received data for debugging
+        log_message('info', 'Received filter parameters: ' . json_encode($data));
 
-    // Check if data is empty
-    if (empty($data)) {
-        log_message('error', 'No filter parameters provided. Returning empty result.');
-        return $this->response->setJSON([]);
-    }
+        // Check if data is empty
+        if (empty($data)) {
+            log_message('error', 'No filter parameters provided. Returning empty result.');
+            return $this->response->setJSON([]);
+        }
 
-    // Extract parameters from the data array
-    $title = $data['title'] ?? null;
-    $description = $data['description'] ?? null;
-    $status = $data['status'] ?? null;
-    $idVal = $data['id'] ?? null;
+        // Extract parameters from the data array
+        $title = $data['title'] ?? null;
+        $description = $data['description'] ?? null;
+        $status = isset($data['status']) ? (int)$data['status'] : null;
+        $idVal = $data['id'] ?? null;
 
-    log_message('info', "Running filter method with parameters: Title: $title, Description: $description, ID: $idVal");
+        log_message('info', "Running filter method with parameters: Title: $title, Description: $description, ID: $idVal");
 
-    // Call the model's filtering method
-    $todoFilterResult = $this->todoModel->todoFilter([
-        'title' => $title,
-        'description' => $description,
-        'status' => $status,
-        'id' => $idVal
-    ]);
+        // Call the model's filtering method
+        $todoFilterResult = $this->todoModel->todoFilter([
+            'title' => $title,
+            'description' => $description,
+            'status' => $status,
+            'id' => $idVal
+        ]);
 
-    // Return the result as JSON
-    return $this->response->setJSON($todoFilterResult);
+        // Return the result as JSON
+        return $this->response->setJSON($todoFilterResult);
     }
 }

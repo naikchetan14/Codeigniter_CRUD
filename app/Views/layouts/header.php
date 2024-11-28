@@ -20,6 +20,15 @@
 
       </div>
       <?php endif; ?>
+      <div class="text-left">
+      <a href="/download"><button class="btn btn-sm" style="background-color:rgba(90, 34, 139);">
+      <i class="fa-sharp fa-solid fa-cloud mx-1"></i>Upload CSV</button></a>
+    </div>
+      <div class="text-left">
+      <a href="/download"><button class="btn btn-sm" style="background-color: rgba(159, 90, 253);">
+        <i class="fa-solid fa-download mx-1"></i>Download CSV</button></a>
+    </div>
+
 
       <form action="/logout" method="post" style="display: inline;">
         <button type="submit" class="btn btn-sm btn-danger">

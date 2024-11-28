@@ -190,7 +190,7 @@
 
               <div class="mb-3">
                 <label for="status" class="form-label">Update Status</label>
-                <input type="number" class="form-control" min="0" max="1" required value="" id="status" name="status" value="0" aria-describedby="emailHelp">
+                <input type="number" class="form-control" min="0" max="1" value="0" id="status" name="status" aria-describedby="emailHelp">
               </div>
               <button type="submit" class="btn btn-success">Update</button>
             </form>
@@ -199,7 +199,8 @@
         </div>
       </div>
     </div>
-    <h1 class="text-center mt-4 text-primary-emphasis">ToDo List</h1>
+    <h2 class="text-center mt-4 text-primary-emphasis">ToDo List</h2>
+   
     <div class="mt-3 text-right d-flex flex-row gap-3 flex-wrap" style="width: 100%;">
       <span class="fw-bold text-secondary">Filter By Name: </span><select data-placeholder="Select a Title" id="nameFilter"
         class="flex-grow-1 flex-shrink-1 nameDropdown" style="border:2px solid green;border-radius:4px;width:150px;">
@@ -220,8 +221,8 @@
       <span class="fw-bold text-secondary">Filter By Status: </span><select data-placeholder="Select a Status" id="statusFilter" class="flex-grow-1 flex-shrink-1 statusDropdown"
         style="border:2px solid green;border-radius:4px;width:150px;">
         <option value="">Select a Status</option>
-        <option value="Pending">Pending</option>
-        <option value="Completed">Completed</option>
+        <option value="0">Pending</option>
+        <option value="1">Completed</option>
       </select>
       <span class="fw-bold text-secondary">Filter By ID: </span><select data-placeholder="Select a ID" id="idFilter"
         class="flex-grow-1 flex-shrink-1 idDropdown" style="border:2px solid green;border-radius:4px;width:150px;">
@@ -278,7 +279,7 @@
                   </td>
 
 
-                  <td><a href="/delete/<?= $todo["Id"] ?>" onclick="confirm('confirm You want to Delete!');"><button type="button" class="btn btn-danger btn-sm" action="/delete/<?= $todo["Id"] ?>"><i class="fa-sharp fa-solid fa-trash"></i></button></a></td>
+                  <td><a href="/delete/<?= $todo["Id"] ?>" onclick="return confirmDelete();"><button type="button" class="btn btn-danger btn-sm" action="/delete/<?= $todo["Id"] ?>"><i class="fa-sharp fa-solid fa-trash"></i></button></a></td>
 
                 </tr>
               <?php else: ?>
@@ -309,7 +310,7 @@
                   </td>
 
 
-                  <td><a href="/delete/<?= $todo["Id"] ?>" onclick="confirm('confirm You want to Delete!');"><button type="button" class="btn btn-danger btn-sm" action="/delete/<?= $todo["Id"] ?>"><i class="fa-sharp fa-solid fa-trash"></i></button></a></td>
+                  <td><a href="/delete/<?= $todo["Id"] ?>" onclick="return confirmDelete();"><button type="button" class="btn btn-danger btn-sm" action="/delete/<?= $todo["Id"] ?>"><i class="fa-sharp fa-solid fa-trash"></i></button></a></td>
 
                 </tr>
               <?php endif; ?>
@@ -331,6 +332,9 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 <script {csp-script-nonce}>
+   function confirmDelete() {
+        return confirm('Are you sure you want to delete this ToDo?');
+    }
   $(document).ready(function() {
     $('#titleFilter,#descFilter,#statusFilter,#idFilter').select2();
     $('#todoTable').DataTable({
@@ -340,6 +344,7 @@
         [5, 10, 25, "All"]
       ]
     }); // Initialize DataTables on the table with id 'todoTable'
+   
     var myModal = document.getElementById('staticBackdrop');
     myModal.addEventListener('show.bs.modal', function(event) {
       // Get the button that triggered the modal
@@ -395,10 +400,33 @@
     });
 
     $('#nameFilter,#descFilter,#statusFilter,#idFilter').on('change', function() {
-      const title = $('#nameFilter').val();
-      const desc = $('#descFilter').val();
-      const status = $('#statusFilter').val() === 'Completed' ? 1 : 0;
-      const idVal = $('#idFilter').val();
+      let title = $('#nameFilter').val();
+      let desc = $('#descFilter').val();
+      let idVal = $('#idFilter').val();
+
+      if(title === ''){
+        title=null;
+      }
+      if(desc === ''){
+        desc=null;
+      }
+      if(idVal === ''){
+        idVal=null;
+      }
+      // Check if the status filter is selected
+      let status = $('#statusFilter').val();
+      if (status === '') {
+        status = null; // Set to null if no status is selected
+      } else {
+        status = status === 'Completed' ? 1 : 0; // Convert to 1 or 0
+      }
+      console.log("Sending filter values:", {
+        title: title,
+        description: desc,
+        status: status,
+        id: idVal
+    });
+
       $.ajax({
         url: '/todofilter',
         method: "POST",
@@ -436,7 +464,7 @@
                     </div>
                   </td>
                   <td>
-                <button type="button" disabled="${ statusText === 'Completed'?true:false}" class="btn btn-primary btn-sm"
+                <button type="button" ${btnDisabled ? 'disabled' : ''} class="btn btn-primary btn-sm"
                       data-bs-toggle="modal"
                       data-bs-target="#staticBackdrop"
                       data-id="${item.Id}"
@@ -447,12 +475,12 @@
                       <i class="mx-1 fa-regular fa-pen-to-square"></i>
                     </button>
                   </td>
-     <td><a href="/delete/${item.Id}" onclick="confirm('confirm You want to Delete!');"><button type="button" class="btn btn-danger btn-sm" action="/delete/<?= $todo["Id"] ?>"><i class="fa-sharp fa-solid fa-trash"></i></button></a></td>
+                  <td><a href="/delete/${item.Id}" onclick="return confirmDelete();"><button type="button" class="btn btn-danger btn-sm" action="/delete/<?= $todo["Id"] ?>"><i class="fa-sharp fa-solid fa-trash"></i></button></a></td>
      </tr>      
            `
               );
             });
-          }else{
+          } else {
             todoTableBody.append('<h6 class="text-danger text-center w-100 d-block">No Todos Found</h6>');
           }
         },

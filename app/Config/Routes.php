@@ -11,6 +11,7 @@ $routes->group('',['filter' =>'auth'] ,function (RouteCollection $routes) {
     $routes->get('/delete/(:num)','Home::delete/$1');
     $routes->post('edit/(:num)','Home::edit/$1');
     $routes->post('/todofilter','Home::filter');
+    $routes->get('/download','Home::download');
 });
 
 $routes->get('/register','Home::register');

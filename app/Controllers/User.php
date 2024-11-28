@@ -39,10 +39,12 @@ class User extends BaseController
                 'userID' => $user['userID'],
                 'userName' => $user['name']
             ]);
-            return redirect()->to(base_url('/'))->with('message', 'Login successful!');
+            return redirect()->to(base_url('/'))->with('message', 'Login Successful!');
         } else {
             log_message('debug', "Invalid login credentials for email: $email");
+            session()->setFlashdata('errors', 'Invalid Email Or Password!');
             return redirect()->to(base_url('/login'))->with('message', 'Invalid email or password');
+
         }
     }
     public function addNewUser()
