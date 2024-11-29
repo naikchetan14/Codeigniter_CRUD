@@ -18,12 +18,18 @@
         <?php if (session()->get('isLoggedIn')) : ?>
           <p class="text-white fw-bold" style="font-size: 18px;">Welcome <?= session()->get('userName') ?>!</p>
 
-      </div>
+     
       <?php endif; ?>
+      </div>
+
+      <form action="/upload" method="post" enctype="multipart/form-data">
       <div class="text-left">
-      <a href="/download"><button class="btn btn-sm" style="background-color:rgba(90, 34, 139);">
-      <i class="fa-sharp fa-solid fa-cloud mx-1"></i>Upload CSV</button></a>
+       <input type="file" name="file" id="file" style="display:none;" required>
+      <button type="button" id="uploadButton" class="btn btn-sm" 
+      style="background-color:rgba(159, 80, 133);"><i class="fa-solid fa-upload mx-1"></i>Upload CSV</button>
     </div>
+ </form>
+ 
       <div class="text-left">
       <a href="/download"><button class="btn btn-sm" style="background-color: rgba(159, 90, 253);">
         <i class="fa-solid fa-download mx-1"></i>Download CSV</button></a>
@@ -36,6 +42,7 @@
           Log out
         </button>
       </form>
+
     </div>
     <button
       class="navbar-toggler"

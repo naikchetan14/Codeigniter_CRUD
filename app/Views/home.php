@@ -256,9 +256,9 @@
 
                   <th scope="row"><?= esc($todo['Id']) ?></th>
 
-                  <td style=" text-decoration: line-through;"><?= esc($todo['title']) ?></td>
-                  <td style=" text-decoration: line-through;"><?= esc($todo['description']) ?></td>
-                  <td style=" text-decoration: line-through;"><?= esc($todo['date']) ?></td>
+                  <td style="text-decoration: line-through;"><?= esc($todo['title']) ?></td>
+                  <td style="text-decoration: line-through;"><?= esc($todo['description']) ?></td>
+                  <td style="text-decoration: line-through;"><?= esc($todo['date']) ?></td>
 
                   <td>
                     <div>
@@ -492,6 +492,18 @@
 
 
   });
+
+  document.getElementById('uploadButton').addEventListener('click',function(){
+    console.log("form Running....")
+    const fileInput =document.getElementById('file');
+    fileInput.click();
+
+    fileInput.addEventListener('change',function(){
+      if(fileInput.files.length > 0){
+        fileInput.closest('form').submit();
+      }
+    })
+  })
 </script>
 
 <!-- -->

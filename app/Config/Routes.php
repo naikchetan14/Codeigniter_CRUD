@@ -12,6 +12,7 @@ $routes->group('',['filter' =>'auth'] ,function (RouteCollection $routes) {
     $routes->post('edit/(:num)','Home::edit/$1');
     $routes->post('/todofilter','Home::filter');
     $routes->get('/download','Home::download');
+    $routes->post('/upload','Home::Upload');
 });
 
 $routes->get('/register','Home::register');
