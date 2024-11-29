@@ -30,9 +30,9 @@ class User extends BaseController
         $email = $this->request->getPost('email');
         $password = $this->request->getPost('password');
         $user = $this->userModel->where('email', $email)->first();
-
+        // log_message('info','My first info table'.  $user);
         // Check if user exists and verify password
-        if ($user) {
+        if ($user && password_verify($password, $user['password'])) {
             // Set session data
             session()->set([
                 'isLoggedIn' => true,
