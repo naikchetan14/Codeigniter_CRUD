@@ -209,22 +209,7 @@ class Home extends BaseController
     public function filter()
     {
 
-        // Log the received data for debugging
-        // log_message('info', 'Received filter parameters: ' . json_encode($data));
-        //     log_message('info','Running filter method');
-        //     $title=$this->request->getPost("title");
-        //     $description=$this->request->getPost("description");
-        //     $status=$this->request->getPost("status");
-
-        //     $idVal=$this->request->getPost("idVal");
-        //     log_message('info', "Received filter parameters: Title: $title, Description: $description,ID: $idVal");
-        //     $todoFilterResult=$this->todoModel->todoFilter([
-        //         'title' => $title,
-        //         'description' => $description,
-        //         'status' => $status,
-        //         'id'=> $idVal
-        //     ]);
-        //     return $this->response->setJSON($todoFilterResult);
+      
         $data = $this->request->getJSON(true); // true returns an associative array
 
         // Log the received data for debugging
@@ -235,6 +220,7 @@ class Home extends BaseController
             log_message('error', 'No filter parameters provided. Returning empty result.');
             return $this->response->setJSON([]);
         }
+        log_message('info', 'Rmy new log messsage running here: ' . json_encode($data));
 
         // Extract parameters from the data array
         $title = $data['title'] ?? null;

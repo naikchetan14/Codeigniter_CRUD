@@ -4,13 +4,13 @@
   <div class="container-fluid">
     <div>
       <i
-        class="fa-solid fa-clipboard-check"
-        style="color: #fff; font-size: 38px"></i>
+        class="fa-solid fa-clipboard-check "
+        style="color: #fff; font-size: 38px;"></i>
       <a
-        class="navbar-brand"
+        class="navbar-brand text-white fw-bold"
         href="/"
         method='GET'
-        style="font-size: 30px; font-weight: bolder">TODO</a>
+        style="font-size: 25px; font-weight: bolder">TODO</a>
     </div>
 
     <div class="d-flex flex-row justify-content-center gap-2 align-items-center">
@@ -29,7 +29,7 @@
       style="background-color:rgba(159, 80, 133);"><i class="fa-solid fa-upload mx-1"></i>Upload CSV</button>
     </div>
  </form>
- 
+
       <div class="text-left">
       <a href="/download"><button class="btn btn-sm" style="background-color: rgba(159, 90, 253);">
         <i class="fa-solid fa-download mx-1"></i>Download CSV</button></a>

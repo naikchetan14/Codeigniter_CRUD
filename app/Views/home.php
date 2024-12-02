@@ -30,7 +30,7 @@
       /* White text */
       font-weight: bold;
       /* Bold text */
-      text-align: center;
+      text-align: center !important;
       /* Center text */
     }
 
@@ -97,6 +97,21 @@
 
     #todoTable_filter {
       margin-bottom: 10px;
+    }
+
+    .modal {
+      z-index: 1055 !important;
+      /* Ensure modal is above other elements */
+    }
+
+    .select2-container {
+      z-index: 1060 !important;
+      /* Ensure Select2 container is above other elements */
+    }
+
+    .select2-dropdown {
+      z-index: 1061 !important;
+      /* Ensure Select2 dropdown is above other elements */
     }
   </style>
 </head>
@@ -199,42 +214,67 @@
         </div>
       </div>
     </div>
+
+    <!-- filter Modal -->
+    <div class="modal fade" id="filterModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog w-25">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">filter ToDo List!</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form method="post" action="/todofilter" class="d-flex flex-column gap-2 w-100 justify-content-center align-items-center">
+              <span class="fw-bold text-secondary">Filter By Name: </span>
+              <select data-placeholder="Select a Title" id="nameFilter"
+                class="flex-grow-1 flex-shrink-1 nameDropdown" style="border:2px solid green;border-radius:4px;width:100%">
+                <option value="">Select a Title</option>
+                <?php foreach ($nameList as $item): ?>
+                  <option value="<?= esc($item) ?>" style="z-index:100;"><?= esc($item) ?></option>
+                <?php endforeach; ?>
+              </select>
+
+              <span class="fw-bold text-secondary">Filter By description: </span><select data-placeholder="Select a Description" id="descFilter"
+                class="flex-grow-1 flex-shrink-1 descDropdown" style="border:2px solid green;border-radius:4px;width:100%;">
+                <option value="">Select a Description</option>
+                <?php foreach ($descriptionList as $item): ?>
+                  <option value="<?= esc($item) ?>"><?= esc($item) ?></option>
+                <?php endforeach; ?>
+              </select>
+
+              <span class="fw-bold text-secondary">Filter By Status: </span>
+<select data-placeholder="Select a Status" id="statusFilter" class="flex-grow-1 flex-shrink-1 statusDropdown"
+    style="border:2px solid green;border-radius:4px;width:100%;">
+    <option value="">Select a Status</option>
+    <option value="0">Pending</option>
+    <option value="1">Completed</option>
+</select>
+              <span class="fw-bold text-secondary">Filter By ID: </span><select data-placeholder="Select a ID" id="idFilter"
+                class="flex-grow-1 flex-shrink-1 idDropdown" style="border:2px solid green;border-radius:4px;width:100%;">
+                <option value="">Select a ID</option>
+                <?php foreach ($todoIDS as $item): ?>
+                  <option value="<?= esc($item) ?>"><?= esc($item) ?></option>
+                <?php endforeach; ?>
+              </select>
+              </select>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button"  class="btn btn-danger" onclick="filterTodos()">Filter List</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <h2 class="text-center mt-4 text-primary-emphasis">ToDo List</h2>
-   
+
     <div class="mt-3 text-right d-flex flex-row gap-3 flex-wrap" style="width: 100%;">
-      <span class="fw-bold text-secondary">Filter By Name: </span><select data-placeholder="Select a Title" id="nameFilter"
-        class="flex-grow-1 flex-shrink-1 nameDropdown" style="border:2px solid green;border-radius:4px;width:150px;">
-        <option value="">Select a Title</option>
-        <?php foreach ($nameList as $item): ?>
-          <option value="<?= esc($item) ?>"><?= esc($item) ?></option>
-        <?php endforeach; ?>
-      </select>
 
-      <span class="fw-bold text-secondary">Filter By description: </span><select data-placeholder="Select a Description" id="descFilter"
-        class="flex-grow-1 flex-shrink-1 descDropdown" style="border:2px solid green;border-radius:4px;width:150px;">
-        <option value="">Select a Description</option>
-        <?php foreach ($descriptionList as $item): ?>
-          <option value="<?= esc($item) ?>"><?= esc($item) ?></option>
-        <?php endforeach; ?>
-      </select>
-
-      <span class="fw-bold text-secondary">Filter By Status: </span><select data-placeholder="Select a Status" id="statusFilter" class="flex-grow-1 flex-shrink-1 statusDropdown"
-        style="border:2px solid green;border-radius:4px;width:150px;">
-        <option value="">Select a Status</option>
-        <option value="0">Pending</option>
-        <option value="1">Completed</option>
-      </select>
-      <span class="fw-bold text-secondary">Filter By ID: </span><select data-placeholder="Select a ID" id="idFilter"
-        class="flex-grow-1 flex-shrink-1 idDropdown" style="border:2px solid green;border-radius:4px;width:150px;">
-        <option value="">Select a ID</option>
-        <?php foreach ($todoIDS as $item): ?>
-          <option value="<?= esc($item) ?>"><?= esc($item) ?></option>
-        <?php endforeach; ?>
-      </select>
-      </select>
     </div>
 
-    <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-success btn-sm mt-2 mb-2"><i class="fa-regular fa-plus"></i></button>
+    <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-success btn-sm mt-2 mb-2">
+      <i class="fa-regular fa-plus"></i></button>
+    <button type="button" data-bs-toggle="modal" data-bs-target="#filterModal" class="btn btn-primary btn-sm mt-2 mb-2">
+    <i class="fa-sharp fa-solid fa-filter"></i></button>
     <div style="height: 450px; overflow-y: auto;">
       <table class="table text-center" id="todoTable" style="max-height:200px;">
         <thead class="table-dark">
@@ -332,9 +372,9 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 <script {csp-script-nonce}>
-   function confirmDelete() {
-        return confirm('Are you sure you want to delete this ToDo?');
-    }
+  function confirmDelete() {
+    return confirm('Are you sure you want to delete this ToDo?');
+  }
   $(document).ready(function() {
     $('#titleFilter,#descFilter,#statusFilter,#idFilter').select2();
     $('#todoTable').DataTable({
@@ -344,7 +384,11 @@
         [5, 10, 25, "All"]
       ]
     }); // Initialize DataTables on the table with id 'todoTable'
-   
+    $('#filterListButton').on('click', function() {
+        // Call your filter function here
+        console.log("filter list Running")
+        filterTodos();
+    });
     var myModal = document.getElementById('staticBackdrop');
     myModal.addEventListener('show.bs.modal', function(event) {
       // Get the button that triggered the modal
@@ -399,107 +443,92 @@
       allowClear: true
     });
 
-    $('#nameFilter,#descFilter,#statusFilter,#idFilter').on('change', function() {
-      let title = $('#nameFilter').val();
-      let desc = $('#descFilter').val();
-      let idVal = $('#idFilter').val();
-
-      if(title === ''){
-        title=null;
-      }
-      if(desc === ''){
-        desc=null;
-      }
-      if(idVal === ''){
-        idVal=null;
-      }
-      // Check if the status filter is selected
-      let status = $('#statusFilter').val();
-      if (status === '') {
-        status = null; // Set to null if no status is selected
-      } else {
-        status = status === 'Completed' ? 1 : 0; // Convert to 1 or 0
-      }
-      console.log("Sending filter values:", {
-        title: title,
-        description: desc,
-        status: status,
-        id: idVal
-    });
-
-      $.ajax({
-        url: '/todofilter',
-        method: "POST",
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Adjust according to your CSRF setup
-        },
-        contentType: 'application/json',
-        data: JSON.stringify({
-          title: title,
-          description: desc,
-          status: status,
-          id: idVal
-        }),
-        success: function(response) {
-          console.log("Success", response);
-          // Clear the existing table body
-          const todoTableBody = $('#todoTable tbody');
-          todoTableBody.empty();
-
-          if (response.length !== 0) {
-            response.forEach((item) => {
-              console.log('status', typeof item.status)
-              const statusText = item.status === '1' ? 'Completed' : 'Pending';
-              const btnDisabled = item.status === '1' ? true : false;
-              const statusTextclass = item.status == '1' ? 'text-success' : 'text-danger';
-              todoTableBody.append(
-                `<tr>         
-                <th scope="row">${item.Id}</th>
-                  <td style="text-decoration:  ${statusText === 'Completed'?'line-through':''};">${item.title}</td>
-                  <td style=" text-decoration: ${statusText === 'Completed'?'line-through':''}">${item.description}</td>
-                  <td style=" text-decoration:  ${statusText === 'Completed'?'line-through':''};">${item.date}</td>
-                  <td>
-                    <div>
-                      <p class="${statusTextclass} fw-bold">${statusText}</p>
-                    </div>
-                  </td>
-                  <td>
-                <button type="button" ${btnDisabled ? 'disabled' : ''} class="btn btn-primary btn-sm"
-                      data-bs-toggle="modal"
-                      data-bs-target="#staticBackdrop"
-                      data-id="${item.Id}"
-                      data-staus=""
-                      data-title="${item.title}"
-                      data-description="${item.description}"
-                      data-date="${item.date}">
-                      <i class="mx-1 fa-regular fa-pen-to-square"></i>
-                    </button>
-                  </td>
-                  <td><a href="/delete/${item.Id}" onclick="return confirmDelete();"><button type="button" class="btn btn-danger btn-sm" action="/delete/<?= $todo["Id"] ?>"><i class="fa-sharp fa-solid fa-trash"></i></button></a></td>
-     </tr>      
-           `
-              );
-            });
-          } else {
-            todoTableBody.append('<h6 class="text-danger text-center w-100 d-block">No Todos Found</h6>');
-          }
-        },
-        error: function() {
-          console.log("error");
-        }
-      })
-    })
+   
 
 
   });
+// Define your filter function
+function filterTodos() {
+    // Get the values from the dropdowns
+    let title = $('#nameFilter').val();
+    let desc = $('#descFilter').val();
+    let idVal = $('#idFilter').val();
+    let status = $('#statusFilter').val();
+    console.log("status on change value ",typeof status)
 
-  document.getElementById('uploadButton').addEventListener('click',function(){
+    // Prepare the data for the AJAX request
+    let filterData = {
+        title: title ? title : null,
+        description: desc ? desc : null,
+        status: status ? parseInt(status) : null,        
+        id: idVal ? idVal : null
+    };
+
+    console.log("filterData",filterData)
+
+    console.log("Sending filter values:", filterData);
+
+    // Make the AJAX request
+    $.ajax({
+        url: '/todofilter',
+        method: "POST",
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Adjust according to your CSRF setup
+        },
+        contentType: 'application/json',
+        data: JSON.stringify(filterData),
+        success: function(response) {
+            console.log("Success", response);
+            // Handle the response and update the table
+            const todoTableBody = $('#todoTable tbody');
+            todoTableBody.empty();
+
+            if (response.length !== 0) {
+                response.forEach((item) => {
+                    const statusText = item.status === '1' ? 'Completed' : 'Pending';
+                    const btnDisabled = item.status === '1' ? true : false;
+                    const statusTextclass = item.status == '1' ? 'text-success' : 'text-danger';
+                    todoTableBody.append(
+                        `<tr>
+                            <th scope="row">${item.Id}</th>
+                            <td style="text-decoration: ${statusText === 'Completed' ? 'line-through' : ''};">${item.title}</td>
+                            <td style="text-decoration: ${statusText === 'Completed' ? 'line-through' : ''};">${item.description}</td>
+                            <td style="text-decoration: ${statusText === 'Completed' ? 'line-through' : ''};">${item.date}</td>
+                            <td><p class="${statusTextclass} fw-bold">${statusText}</p></td>
+                            <td>
+                                <button type="button" ${btnDisabled ? 'disabled' : ''} class="btn btn-primary btn-sm"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#staticBackdrop"
+                                    data-id="${item.Id}"
+                                    data-title="${item.title}"
+                                    data-description="${item.description}"
+                                    data-date="${item.date}">
+                                    <i class="mx-1 fa-regular fa-pen-to-square"></i>
+                                </button>
+                            </td>
+                            <td><a href="/delete/${item.Id}" onclick="return confirmDelete();"><button type="button" class="btn btn-danger btn-sm"><i class="fa-sharp fa-solid fa-trash"></i></button></a></td>
+                        </tr>`
+                    );
+                });
+            } else {
+                todoTableBody.append('<h6 class="text-danger text-center w-100 d-block">No Todos Found</h6>');
+            }
+
+            // Close the modal after filtering
+            $('#filterModal').modal('hide'); // Use the ID of your filter modal
+        },
+        error: function() {
+            console.log("error");
+        }
+    });
+}
+  document.getElementById('uploadButton').addEventListener('click', function() {
     console.log("form Running....")
-    const fileInput =document.getElementById('file');
+    const fileInput = document.getElementById('file');
     fileInput.click();
 
-    fileInput.addEventListener('change',function(){
-      if(fileInput.files.length > 0){
+    fileInput.addEventListener('change', function() {
+      if (fileInput.files.length > 0) {
         fileInput.closest('form').submit();
       }
     })
