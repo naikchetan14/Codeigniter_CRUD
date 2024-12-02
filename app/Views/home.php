@@ -225,17 +225,18 @@
           </div>
           <div class="modal-body">
             <form method="post" action="/todofilter" class="d-flex flex-column gap-2 w-100 justify-content-center align-items-center">
-              <span class="fw-bold text-secondary">Filter By Name: </span>
-              <select data-placeholder="Select a Title" id="nameFilter"
-                class="flex-grow-1 flex-shrink-1 nameDropdown" style="border:2px solid green;border-radius:4px;width:100%">
+              <span class="fw-bold text-secondary">Filter By Title: </span>
+              <select id="nameFilter"
+                class="js-example-basic-single" style="border:2px solid green;border-radius:4px;width:100%;">
                 <option value="">Select a Title</option>
                 <?php foreach ($nameList as $item): ?>
                   <option value="<?= esc($item) ?>" style="z-index:100;"><?= esc($item) ?></option>
                 <?php endforeach; ?>
               </select>
 
-              <span class="fw-bold text-secondary">Filter By description: </span><select data-placeholder="Select a Description" id="descFilter"
-                class="flex-grow-1 flex-shrink-1 descDropdown" style="border:2px solid green;border-radius:4px;width:100%;">
+              <span class="fw-bold text-secondary">Filter By Description: </span>
+              <select id="descFilter"
+                class="js-example-basic-single" style="border:2px solid green;border-radius:4px;width:100%;">
                 <option value="">Select a Description</option>
                 <?php foreach ($descriptionList as $item): ?>
                   <option value="<?= esc($item) ?>"><?= esc($item) ?></option>
@@ -243,14 +244,14 @@
               </select>
 
               <span class="fw-bold text-secondary">Filter By Status: </span>
-<select data-placeholder="Select a Status" id="statusFilter" class="flex-grow-1 flex-shrink-1 statusDropdown"
-    style="border:2px solid green;border-radius:4px;width:100%;">
-    <option value="">Select a Status</option>
-    <option value="0">Pending</option>
-    <option value="1">Completed</option>
-</select>
-              <span class="fw-bold text-secondary">Filter By ID: </span><select data-placeholder="Select a ID" id="idFilter"
-                class="flex-grow-1 flex-shrink-1 idDropdown" style="border:2px solid green;border-radius:4px;width:100%;">
+              <select id="statusFilter" class="flex-grow-1 flex-shrink-1  js-example-basic-single"
+                style="border:2px solid green;border-radius:4px;width:100%;">
+                <option value="">Select a Status</option>
+                <option value="0">Pending</option>
+                <option value="1">Completed</option>
+              </select>
+              <span class="fw-bold text-secondary">Filter By ID: </span><select id="idFilter"
+                class="js-example-basic-single" style="border:2px solid green;border-radius:4px;width:100%;">
                 <option value="">Select a ID</option>
                 <?php foreach ($todoIDS as $item): ?>
                   <option value="<?= esc($item) ?>"><?= esc($item) ?></option>
@@ -260,7 +261,7 @@
             </form>
           </div>
           <div class="modal-footer">
-            <button type="button"  class="btn btn-danger" onclick="filterTodos()">Filter List</button>
+            <button type="button" class="btn btn-danger" onclick="filterTodos()">Filter List</button>
           </div>
         </div>
       </div>
@@ -274,7 +275,7 @@
     <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-success btn-sm mt-2 mb-2">
       <i class="fa-regular fa-plus"></i></button>
     <button type="button" data-bs-toggle="modal" data-bs-target="#filterModal" class="btn btn-primary btn-sm mt-2 mb-2">
-    <i class="fa-sharp fa-solid fa-filter"></i></button>
+      <i class="fa-sharp fa-solid fa-filter"></i></button>
     <div style="height: 450px; overflow-y: auto;">
       <table class="table text-center" id="todoTable" style="max-height:200px;">
         <thead class="table-dark">
@@ -296,9 +297,9 @@
 
                   <th scope="row"><?= esc($todo['Id']) ?></th>
 
-                  <td style="text-decoration: line-through;"><?= esc($todo['title']) ?></td>
-                  <td style="text-decoration: line-through;"><?= esc($todo['description']) ?></td>
-                  <td style="text-decoration: line-through;"><?= esc($todo['date']) ?></td>
+                  <td style="text-decoration:line-through; color: gray;"><?= esc($todo['title']) ?></td>
+                  <td style="text-decoration:line-through; color: gray;"><?= esc($todo['description']) ?></td>
+                  <td style="text-decoration:line-through; color: gray;"><?= esc($todo['date']) ?></td>
 
                   <td>
                     <div>
@@ -377,6 +378,29 @@
   }
   $(document).ready(function() {
     $('#titleFilter,#descFilter,#statusFilter,#idFilter').select2();
+
+    $('.js-example-basic-single').select2({
+      dropdownParent: $('#filterModal')
+    });
+
+    $('.nameDropdown').select2({
+      placeholder: "Select a Title",
+      allowClear: true
+    });
+    $('.descDropdown').select2({
+      placeholder: "Select the description",
+      allowClear: true
+    });
+
+    $('.statusDropdown').select2({
+      placeholder: "Select the status",
+      allowClear: true
+    });
+    $('.idDropdown').select2({
+      placeholder: "Select the ID",
+      allowClear: true
+    });
+
     $('#todoTable').DataTable({
       "pageLength": 5,
       "lengthMenu": [
@@ -385,9 +409,8 @@
       ]
     }); // Initialize DataTables on the table with id 'todoTable'
     $('#filterListButton').on('click', function() {
-        // Call your filter function here
-        console.log("filter list Running")
-        filterTodos();
+      // Call your filter function here
+      filterTodos();
     });
     var myModal = document.getElementById('staticBackdrop');
     myModal.addEventListener('show.bs.modal', function(event) {
@@ -422,108 +445,95 @@
       editTodoForm.action = '/edit/' + id;
 
     });
-    $('.js-example-basic-single').select2({
-      placeholder: 'Select an option'
-    });
-    $('.nameDropdown').select2({
-      placeholder: "Select a Title",
-      allowClear: true
-    });
-    $('.descDropdown').select2({
-      placeholder: "Select a the description",
-      allowClear: true
-    });
-
-    $('.statusDropdown').select2({
-      placeholder: "Select the status",
-      allowClear: true
-    });
-    $('.idDropdown').select2({
-      placeholder: "Select the ID",
-      allowClear: true
-    });
-
-   
-
 
   });
-// Define your filter function
-function filterTodos() {
+
+
+  // Define your filter function
+  function filterTodos() {
+
     // Get the values from the dropdowns
     let title = $('#nameFilter').val();
     let desc = $('#descFilter').val();
     let idVal = $('#idFilter').val();
     let status = $('#statusFilter').val();
-    console.log("status on change value ",typeof status)
+    console.log("status on change value ", typeof status)
 
     // Prepare the data for the AJAX request
     let filterData = {
-        title: title ? title : null,
-        description: desc ? desc : null,
-        status: status ? parseInt(status) : null,        
-        id: idVal ? idVal : null
+      title: title ? title : null,
+      description: desc ? desc : null,
+      status: status ? parseInt(status) : null,
+      id: idVal ? idVal : null
     };
 
-    console.log("filterData",filterData)
+    console.log("filterData", filterData)
 
     console.log("Sending filter values:", filterData);
 
     // Make the AJAX request
     $.ajax({
-        url: '/todofilter',
-        method: "POST",
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Adjust according to your CSRF setup
-        },
-        contentType: 'application/json',
-        data: JSON.stringify(filterData),
-        success: function(response) {
-            console.log("Success", response);
-            // Handle the response and update the table
-            const todoTableBody = $('#todoTable tbody');
-            todoTableBody.empty();
+      url: '/todofilter',
+      method: "POST",
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Adjust according to your CSRF setup
+      },
+      contentType: 'application/json',
+      data: JSON.stringify(filterData),
+      success: function(response) {
+        console.log("Success", response);
+        // Handle the response and update the table
+        // const todoTableBody = $('#todoTable tbody');
+        // todoTableBody.empty();
+        // const todoTable = $('#todoTable').DataTable();
+        const todoTable = $('#todoTable').DataTable();
+        todoTable.clear();
 
-            if (response.length !== 0) {
-                response.forEach((item) => {
-                    const statusText = item.status === '1' ? 'Completed' : 'Pending';
-                    const btnDisabled = item.status === '1' ? true : false;
-                    const statusTextclass = item.status == '1' ? 'text-success' : 'text-danger';
-                    todoTableBody.append(
-                        `<tr>
-                            <th scope="row">${item.Id}</th>
-                            <td style="text-decoration: ${statusText === 'Completed' ? 'line-through' : ''};">${item.title}</td>
-                            <td style="text-decoration: ${statusText === 'Completed' ? 'line-through' : ''};">${item.description}</td>
-                            <td style="text-decoration: ${statusText === 'Completed' ? 'line-through' : ''};">${item.date}</td>
-                            <td><p class="${statusTextclass} fw-bold">${statusText}</p></td>
-                            <td>
-                                <button type="button" ${btnDisabled ? 'disabled' : ''} class="btn btn-primary btn-sm"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#staticBackdrop"
-                                    data-id="${item.Id}"
-                                    data-title="${item.title}"
-                                    data-description="${item.description}"
-                                    data-date="${item.date}">
-                                    <i class="mx-1 fa-regular fa-pen-to-square"></i>
-                                </button>
-                            </td>
-                            <td><a href="/delete/${item.Id}" onclick="return confirmDelete();"><button type="button" class="btn btn-danger btn-sm"><i class="fa-sharp fa-solid fa-trash"></i></button></a></td>
-                        </tr>`
-                    );
-                });
-            } else {
-                todoTableBody.append('<h6 class="text-danger text-center w-100 d-block">No Todos Found</h6>');
-            }
-
-            // Close the modal after filtering
-            $('#filterModal').modal('hide'); // Use the ID of your filter modal
-        },
-        error: function() {
-            console.log("error");
+        if (response.length !== 0) {
+          response.forEach((item) => {
+            const statusText = item.status === '1' ? 'Completed' : 'Pending';
+            const btnDisabled = item.status === '1' ? true : false;
+            const statusTextclass = item.status == '1' ? 'text-success' : 'text-danger';
+            const strikethroughStyle = item.status === '1' ? 'text-decoration: line-through; color: gray;' : '';
+            todoTable.row.add([
+              item.Id, // Column 0: ID
+              `<span style="${strikethroughStyle}">${item.title}</span>`, // Column 1: TITLE
+              `<span style="${strikethroughStyle}">${item.description}</span>`, // Column 2: DESCRIPTION
+              `<span style="${strikethroughStyle}">${item.date}</span>`, // Column 3: DATE
+              `<td>
+                    <div>
+                      <p class="${statusTextclass} fw-bold">${statusText}</p>
+                    </div>
+                  </td>`, // Column 4: STATUS
+              `<button type="button" ${btnDisabled ? 'disabled' : ''} class="btn btn-primary btn-sm"
+        data-bs-toggle="modal"
+        data-bs-target="#staticBackdrop"
+        data-id="${item.Id}"
+        data-title="${item.title}"
+        data-description="${item.description}"
+        data-date="${item.date}">
+        <i class="mx-1 fa-regular fa-pen-to-square"></i> 
+    </button>`,
+              `<a href="/delete/${item.Id}" onclick="return confirmDelete();">
+        <button type="button" class="btn btn-danger btn-sm">
+            <i class="fa-sharp fa-solid fa-trash"></i> 
+        </button>
+    </a>`
+            ]);
+          });
+        } else {
+          todoTable.row.add(['', 'No Todos Found', '', '', '', '', '']).draw(false);
         }
+        todoTable.draw();
+        // Close the modal after filtering
+        $('#filterModal').modal('hide'); // Use the ID of your filter modal
+      },
+      error: function() {
+        console.log("error");
+      }
     });
-}
+  }
   document.getElementById('uploadButton').addEventListener('click', function() {
-    console.log("form Running....")
     const fileInput = document.getElementById('file');
     fileInput.click();
 

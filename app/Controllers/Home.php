@@ -149,7 +149,7 @@ class Home extends BaseController
                 'description' => $description,
                 'date' => $date,
             ]);
-            session()->setFlashdata('success', 'Todo Added successfully!');
+            session()->setFlashdata('success', 'Todo Added successfully!'); 
 
 
             // Redirect to the index page after adding

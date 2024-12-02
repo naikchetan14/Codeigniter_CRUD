@@ -27,7 +27,7 @@
        <input type="file" name="file" id="file" style="display:none;" required>
       <button type="button" id="uploadButton" class="btn btn-sm" 
       style="background-color:rgba(159, 80, 133);"><i class="fa-solid fa-upload mx-1"></i>Upload CSV</button>
-    </div>
+    </div>`
  </form>
 
       <div class="text-left">

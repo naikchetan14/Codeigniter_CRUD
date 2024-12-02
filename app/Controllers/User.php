@@ -12,7 +12,7 @@ class User extends BaseController
     {
         $this->userModel = new ModelsUserModel();
     }
-    
+
     public function getLoginUser()
     {
         $validation = \Config\Services::validation();
@@ -22,11 +22,11 @@ class User extends BaseController
         ]);
         $data = $this->request->getPost();
 
-    
-        if (!$this->validate($validation->getRules(),$data)) {
+
+        if (!$this->validate($validation->getRules(), $data)) {
             return redirect()->to(base_url('/login'))->with('message', 'Validation failed!')->withInput()->with('errors', $this->validator->getErrors());
         }
-    
+
         $email = $this->request->getPost('email');
         $password = $this->request->getPost('password');
         $user = $this->userModel->where('email', $email)->first();
@@ -44,7 +44,6 @@ class User extends BaseController
             log_message('debug', "Invalid login credentials for email: $email");
             session()->setFlashdata('errors', 'Invalid Email Or Password!');
             return redirect()->to(base_url('/login'))->with('message', 'Invalid email or password');
-
         }
     }
     public function addNewUser()
@@ -84,8 +83,6 @@ class User extends BaseController
                 'userName' => $user['name']
             ]);
             // session()->setFlashdata('success', 'User Added Successfully!');
-
-
             // Redirect to the index page after adding
             return redirect()->to(base_url('/'))->with('message', 'User Added Successfully!');
         } else {
