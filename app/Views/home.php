@@ -12,11 +12,21 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <!-- STYLES -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
   <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
   <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
   <style {csp-style-nonce}>
+    *{
+      font-family: "Poppins", sans-serif;
+      font-weight: 400;
+    }
+    body{
+      background-color:#ffffff;
+    }
     .dataTable {
       text-align: center;
       background-color: #ffffff;
@@ -113,6 +123,26 @@
       z-index: 1061 !important;
       /* Ensure Select2 dropdown is above other elements */
     }
+    /* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #454545;
+  scroll-behavior: smooth;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
   </style>
 </head>
 
@@ -147,7 +177,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+            <h1 class="modal-title fs-5" id="exampleModalLabel">ADD TODO</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
@@ -205,7 +235,7 @@
 
               <div class="mb-3">
                 <label for="status" class="form-label">Update Status</label>
-                <input type="number" class="form-control" min="0" max="1" value="0" id="status" name="status" aria-describedby="emailHelp">
+                <input type="number" class="form-control" required min="0" max="1" value="0" id="status" name="status" aria-describedby="emailHelp">
               </div>
               <button type="submit" class="btn btn-success">Update</button>
             </form>
@@ -266,17 +296,19 @@
         </div>
       </div>
     </div>
-    <h2 class="text-center mt-4 text-primary-emphasis">ToDo List</h2>
+    <h4 class="mt-4 text-primary-emphasis">ToDo List</h4>
 
     <div class="mt-3 text-right d-flex flex-row gap-3 flex-wrap" style="width: 100%;">
 
     </div>
 
     <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-success btn-sm mt-2 mb-2">
-      <i class="fa-regular fa-plus"></i></button>
+      <i class="fa-regular fa-plus mx-1"></i>ADD USER</button>
     <button type="button" data-bs-toggle="modal" data-bs-target="#filterModal" class="btn btn-primary btn-sm mt-2 mb-2">
-      <i class="fa-sharp fa-solid fa-filter"></i></button>
-    <div style="height: 450px; overflow-y: auto;">
+      <i class="fa-sharp fa-solid fa-filter mx-1"></i>FILTER LIST</button>
+     <a href="/"> <button type="button" class="btn text-white btn-sm mt-2 mb-2 bg-dark">
+      <i class="fa-solid fa-check mx-1"></i>GET ALL DATA</button></a>
+    <div style="height: 450px;">
       <table class="table text-center" id="todoTable" style="max-height:200px;">
         <thead class="table-dark">
           <tr>
@@ -303,7 +335,7 @@
 
                   <td>
                     <div>
-                      <p class="text-success fw-bold">Completed</p>
+                  <p class="text-success fw-bold"><i class="fa-solid fa-check mx-1"></i></p>
                     </div>
                   </td>
                   <td>
@@ -334,7 +366,7 @@
 
                   <td>
                     <div>
-                      <p class="text-danger fw-bold">Pending</p>
+                      <p class="text-danger fw-bold"><i class="fa-solid fa-hourglass-half text-danger fw-bold"></i></p>
                     </div>
                   </td>
                   <td>

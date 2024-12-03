@@ -123,4 +123,8 @@ class TodoModel extends Model
             return []; // Return an empty array or handle the error as needed
         }
     }
+
+    public function uploadFile($file){
+        return $this->databaseService->upload($file);
+    }
 }
